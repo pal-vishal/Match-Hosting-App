@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">LetsGoPUBG</string>
+    <string name="drawer_open">draweropen</string>
+    <string name="drawer_closed">drawerclosed</string>
+    <string name="open">opendrawer</string>
+    <string name="closed">closedrawer</string>
+</resources>
