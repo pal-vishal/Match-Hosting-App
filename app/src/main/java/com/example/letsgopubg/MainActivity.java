@@ -5,6 +5,9 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -22,13 +25,14 @@ import com.example.letsgopubg.Database.DatabaseHelper;
 import com.example.letsgopubg.Models.User;
 import com.google.android.material.navigation.NavigationView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity  {
     private static final String TAG = "MainActivity";
     private Utils utils;
 
     private Button btn;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
+    private NavigationView navigationView;
 
 
     @Override
@@ -57,6 +61,10 @@ public class MainActivity extends AppCompatActivity {
         });
          **/
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+        navigationView = (NavigationView) findViewById(R.id.navigationView);
+        setupDrawerContent(navigationView);
+
+
         toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.closed);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
@@ -73,4 +81,99 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+
+
+    private void setupDrawerContent(NavigationView navigationView) {
+
+        navigationView.setNavigationItemSelectedListener(
+
+                new NavigationView.OnNavigationItemSelectedListener() {
+
+                    @Override
+
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+
+                        selectDrawerItem(menuItem);
+
+                        return true;
+
+                    }
+
+                });
+
+    }
+
+    public void selectDrawerItem(MenuItem menuItem) {
+
+
+        Fragment fragment = null;
+        Class fragmentClass;
+
+        switch (menuItem.getItemId()) {
+
+            case R.id.Matches:
+
+                fragmentClass = MatchFragment.class;
+
+                break;
+
+            case R.id.Account:
+
+                fragmentClass = AccountFragment.class;
+
+                break;
+
+            case R.id.HowItWorks:
+
+                fragmentClass = HowItWorksFragment.class;
+
+                break;
+
+            case R.id.SignOut:
+
+                fragmentClass = LogoutFragment.class;
+
+                break;
+            default:
+
+                fragmentClass = MatchFragment.class;
+
+        }
+
+
+        try {
+
+            fragment = (Fragment) fragmentClass.newInstance();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        }
+
+
+        // Insert the fragment by replacing any existing fragment
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
+
+
+        // Highlight the selected item has been done by NavigationView
+
+        menuItem.setChecked(true);
+
+        // Set action bar title
+
+        setTitle(menuItem.getTitle());
+
+        // Close the navigation drawer
+
+        drawerLayout.closeDrawers();
+
+    }
+
+
 }
